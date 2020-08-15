@@ -4,20 +4,22 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
 class ApiClient {
-  ApiClient({
-    @required this.httpClient,
-    @required this.projectId,
-    @required this.secret,
-  });
+  ApiClient(
+      {@required this.httpClient,
+      @required this.projectId,
+      @required this.secret,
+      String host})
+      : host = host ?? _defaultHost;
 
-  static const String _host = 'https://api.wiredash.io/';
+  static const String _defaultHost = 'https://api.wiredash.io/';
 
   final Client httpClient;
   final String projectId;
   final String secret;
+  final String host;
 
   Future<Map<String, dynamic>> get(String urlPath) async {
-    final url = '$_host$urlPath';
+    final url = '$host$urlPath';
     final BaseResponse response = await httpClient.get(url, headers: {
       'project': 'Project $projectId',
       'authorization': 'Secret $secret'
@@ -38,7 +40,7 @@ class ApiClient {
     @required Map<String, String> arguments,
     List<MultipartFile> files,
   }) async {
-    final url = '$_host$urlPath';
+    final url = '$host$urlPath';
     BaseResponse response;
     String responseString;
 

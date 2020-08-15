@@ -64,6 +64,7 @@ class Wiredash extends StatefulWidget {
     @required this.navigatorKey,
     this.options,
     this.theme,
+    this.host,
     @required this.child,
   })  : assert(projectId != null),
         assert(secret != null),
@@ -97,6 +98,8 @@ class Wiredash extends StatefulWidget {
   /// );
   /// ```
   final WiredashThemeData theme;
+
+  final String host;
 
   /// Your application
   final Widget child;
@@ -140,10 +143,10 @@ class WiredashState extends State<Wiredash> {
     _updateDependencies();
 
     networkManager = NetworkManager(ApiClient(
-      httpClient: Client(),
-      projectId: widget.projectId,
-      secret: widget.secret,
-    ));
+        httpClient: Client(),
+        projectId: widget.projectId,
+        secret: widget.secret,
+        host: widget.host));
 
     userManager = UserManager();
     buildInfoManager = BuildInfoManager(PlatformBuildInfo());
