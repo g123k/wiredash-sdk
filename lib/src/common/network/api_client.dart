@@ -63,7 +63,8 @@ class ApiClient {
           url,
           headers: {
             'project': 'Project $projectId',
-            'authorization': 'Secret $secret'
+            'authorization': 'Secret $secret',
+            'Content-Type': 'application/json'
           },
           body: json.encode(arguments),
         );
