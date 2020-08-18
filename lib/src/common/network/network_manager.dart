@@ -8,6 +8,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:package_info/package_info.dart';
 import 'package:wiredash/src/common/network/api_client.dart';
 
+// ignore_for_file: empty_catches
 class NetworkManager {
   NetworkManager(this._apiClient);
 
@@ -35,6 +36,7 @@ class NetworkManager {
   static const String _parameterFeedbackScreenshot = 'file';
   static const String _parameterFeedbackType = 'type';
 
+
   Future<void> sendFeedback({
     @required Map<String, dynamic> deviceInfo,
     String email,
@@ -47,8 +49,15 @@ class NetworkManager {
     MultipartFile screenshotFile;
 
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
-    IosDeviceInfo iosInfo = await DeviceInfoPlugin().iosInfo;
+    AndroidDeviceInfo androidInfo;
+    IosDeviceInfo iosInfo;
+    try {
+      androidInfo = await DeviceInfoPlugin().androidInfo;
+    } catch (e) {}
+
+    try {
+      iosInfo = await DeviceInfoPlugin().iosInfo;
+    } catch (e) {}
 
     if (picture != null) {
       screenshotFile = MultipartFile.fromBytes(
@@ -76,10 +85,10 @@ class NetworkManager {
         _parameterDeviceModel: androidInfo?.model ?? iosInfo?.localizedModel,
         _parameterDeviceBrand: androidInfo?.brand ?? 'Apple',
         _parameterDevicePhysicalDevice:
-            (androidInfo?.isPhysicalDevice ?? iosInfo?.isPhysicalDevice)
-                ?.toString(),
+        (androidInfo?.isPhysicalDevice ?? iosInfo?.isPhysicalDevice)
+            ?.toString(),
         _parameterDeviceVersion:
-            androidInfo?.version?.sdkInt?.toString() ?? iosInfo?.systemVersion,
+        androidInfo?.version?.sdkInt?.toString() ?? iosInfo?.systemVersion,
       },
       files: [screenshotFile],
     );
