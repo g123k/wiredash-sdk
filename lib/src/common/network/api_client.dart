@@ -58,15 +58,20 @@ class ApiClient {
       responseString =
           utf8.decode(await (response as StreamedResponse).stream.toBytes());
     } else {
-      response = await httpClient.post(
-        url,
-        headers: {
-          'project': 'Project $projectId',
-          'authorization': 'Secret $secret'
-        },
-        body: arguments,
-      );
-      responseString = utf8.decode((response as Response).bodyBytes);
+      try {
+        response = await httpClient.post(
+          url,
+          headers: {
+            'project': 'Project $projectId',
+            'authorization': 'Secret $secret'
+          },
+          body: json.encode(arguments),
+        );
+
+        responseString = utf8.decode((response as Response).bodyBytes);
+      } catch (err) {
+        rethrow;
+      }
     }
 
     if (response.statusCode != 200) {
